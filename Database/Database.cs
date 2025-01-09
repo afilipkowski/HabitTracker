@@ -12,7 +12,7 @@ namespace Database
                 connection.Open();
                 var command = connection.CreateCommand();
                 command.CommandText =
-                @"
+                @"d
                     CREATE TABLE IF NOT EXISTS read_pages(
                     id INTEGER PRIMARY KEY,
                     date TEXT,
