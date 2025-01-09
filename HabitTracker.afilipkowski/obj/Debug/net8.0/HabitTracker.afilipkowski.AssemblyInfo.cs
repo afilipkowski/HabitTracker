@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("HabitTracker.afilipkowski")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+7b432620dabfffda640702f975f4055de6473241")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+d1a9c7146657ba615dd652ebb56e015362ef1b7c")]
 [assembly: System.Reflection.AssemblyProductAttribute("HabitTracker.afilipkowski")]
 [assembly: System.Reflection.AssemblyTitleAttribute("HabitTracker.afilipkowski")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
