@@ -24,6 +24,9 @@ static class UserInterface
         {
             Console.WriteLine("Invalid input. Select an option from the menu.");
         }
+        string date;
+        int amount;
+        int id;
         switch (choice)
         {
             case 1:
@@ -39,20 +42,20 @@ static class UserInterface
                 }
                 return false;
             case 2:
-                string? date = GetDate();
-                int amount = GetAmount();
+                date = GetDate();
+                amount = GetAmount();
                 db.InsertRecord(date, amount);
                 return false;
             case 3:
+                Console.WriteLine("Enter ID of the record you want to update.");
+                id = GetID(db);
+                date = GetDate();
+                amount = GetAmount();
+                db.UpdateRecord(id, date, amount);
                 return false;
             case 4:
-                int id;
-                int currentRecords = db.GetCount();
                 Console.WriteLine("Enter ID of the record you want to remove.");
-                while (!int.TryParse(Console.ReadLine(), out id) || id > currentRecords || id <= 0)
-                {
-                    Console.WriteLine("Invalid input. Enter correct ID");
-                }
+                id = GetID(db);
                 db.DeleteRecord(id);
                 return false;
             case 5:
@@ -62,7 +65,7 @@ static class UserInterface
         }
 
     }
-    static private string? GetDate()
+    static private string GetDate()
     {
         string dateInput;
         Console.WriteLine("Enter the date (dd-mm-yyyy):");
@@ -83,6 +86,15 @@ static class UserInterface
             Console.WriteLine("Invalid input. Enter a number.");
         }
         return amount;
+    }
+    static private int GetID(DatabaseHandler db)
+    {
+        int id;
+        while (!int.TryParse(Console.ReadLine(), out id) || !db.RecordExists(id))
+        {
+            Console.WriteLine("Invalid input. Enter correct ID");
+        }
+        return id;
     }
 
 }

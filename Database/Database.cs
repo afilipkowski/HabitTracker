@@ -40,7 +40,6 @@ public class DatabaseHandler
     public List<DatabaseRecord> GetAllRecords()
     {
         List<DatabaseRecord> databaseRecords = new List<DatabaseRecord>();
-
         using (var connection = new SqliteConnection(connectionString))
         {
             connection.Open();
@@ -77,18 +76,35 @@ public class DatabaseHandler
             connection.Close();
         }
     }
-    public int GetCount()
+
+    public void UpdateRecord(int id, string date, int amount)
     {
-        int count;
         using (var connection = new SqliteConnection(connectionString))
         {
             connection.Open();
             var command = connection.CreateCommand();
-            command.CommandText = @$"SELECT COUNT(*) FROM {tableName}";
-            count = Convert.ToInt32(command.ExecuteScalar());
+            command.CommandText = $@"
+            UPDATE {tableName}
+            SET date = '{date}', amount = {amount}
+            WHERE Id={id}
+            ";
+            command.ExecuteNonQuery();
             connection.Close();
         }
-        return count;
+    }
+    public bool RecordExists(int id)
+    {
+        int result;
+        using (var connection = new SqliteConnection(connectionString))
+        {
+            connection.Open();
+            var command = connection.CreateCommand();
+            command.CommandText = @$"SELECT COUNT(*) FROM {tableName} WHERE Id={id}";
+            result = Convert.ToInt32(command.ExecuteScalar());
+            connection.Close();
+        }
+        if (result == 1) return true;
+        else return false;
     }
 }
 
