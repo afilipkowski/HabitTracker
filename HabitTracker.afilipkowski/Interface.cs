@@ -14,23 +14,25 @@ static class UserInterface
         Console.WriteLine("2. Add a new record");
         Console.WriteLine("3. Update a record");
         Console.WriteLine("4. Delete a record");
-        Console.WriteLine("5. Exit the app");
+        Console.WriteLine("5. Generate a report");
+        Console.WriteLine("6. Exit the app");
     }
-
     static public bool HandleInput(DatabaseHandler db)
     {
         int choice;
-        while (!int.TryParse(Console.ReadLine(), out choice) || choice < 1 || choice > 5)
-        {
-            Console.WriteLine("Invalid input. Select an option from the menu.");
-        }
         string date;
         int amount;
         int id;
+        List<DatabaseRecord> records;
+
+        while (!int.TryParse(Console.ReadLine(), out choice) || choice < 1 || choice > 6)
+        {
+            Console.WriteLine("Invalid input. Select an option from the menu.");
+        }
         switch (choice)
         {
             case 1:
-                List<DatabaseRecord> records = db.GetAllRecords();
+                records = db.GetAllRecords();
                 if (records.Count == 0)
                     Console.WriteLine("No records found");
                 else
@@ -59,11 +61,20 @@ static class UserInterface
                 db.DeleteRecord(id);
                 return false;
             case 5:
+                Console.WriteLine("Enter the year for which the report should be displayed.");
+                date = Console.ReadLine();
+                while (!DateTime.TryParseExact(date, "yyyy", new CultureInfo("en-US"), DateTimeStyles.None, out _))
+                {
+                    Console.WriteLine("Invalid input. Enter the year for which the report should be displayed..");
+                    date = Console.ReadLine();
+                }
+                Report.YearlyReport(db.GetAllRecords(), date);
+                return false;
+            case 6:
                 return true;
             default:
                 return false;
         }
-
     }
     static private string GetDate()
     {
@@ -96,5 +107,28 @@ static class UserInterface
         }
         return id;
     }
+}
 
+class Report
+{
+    static public void YearlyReport(List<DatabaseRecord> records, string year)
+    {
+        int pages = 0;
+        int times = 0;
+        bool found = false;
+
+        foreach (var record in records)
+        {
+            if (record.Date.Contains(year))
+            {
+                found = true;
+                pages += record.Amount;
+                times++;
+            }
+        }
+        if (found)
+            Console.WriteLine($"In {year} you read books {times} times and read a total of {pages} pages.");
+        else
+            Console.WriteLine("No data found for the year entered.");
+    }
 }

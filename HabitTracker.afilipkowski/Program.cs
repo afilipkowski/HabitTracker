@@ -11,11 +11,10 @@ class Program
         {
             UserInterface.DisplayMenu();
             endApp = UserInterface.HandleInput(db);
+            Console.WriteLine("Press Enter to continue.");
             Console.ReadKey();
         }
         Console.WriteLine("Goodbye!");
-        
-
     }
 }
 

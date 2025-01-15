@@ -64,7 +64,6 @@ public class DatabaseHandler
         }
         return databaseRecords;
     }
-
     public void DeleteRecord(int id)
     {
         using (var connection = new SqliteConnection(connectionString))
@@ -76,7 +75,6 @@ public class DatabaseHandler
             connection.Close();
         }
     }
-
     public void UpdateRecord(int id, string date, int amount)
     {
         using (var connection = new SqliteConnection(connectionString))
