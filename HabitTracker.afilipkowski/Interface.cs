@@ -2,6 +2,7 @@
 using Database;
 
 namespace HabitTracker;
+
 static class UserInterface
 {
     static public void DisplayMenu()
