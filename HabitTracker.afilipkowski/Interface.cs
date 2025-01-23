@@ -1,4 +1,5 @@
 ﻿using System.Globalization;
+using System.Xml.Serialization;
 using Database;
 
 namespace HabitTracker;
@@ -25,7 +26,6 @@ static class UserInterface
         string date;
         int amount;
         int id;
-        List<DatabaseRecord> records;
         while (!int.TryParse(Console.ReadLine(), out choice) || choice < 1 || choice > 6)
         {
             Console.WriteLine("Invalid input. Select an option from the menu.");
@@ -33,33 +33,37 @@ static class UserInterface
         switch (choice)
         {
             case 1:
-                records = db.GetAllRecords();
-                if (records.Count == 0)
-                    Console.WriteLine("No records found");
-                else
-                {
-                    foreach (var record in records)
-                    {
-                        Console.WriteLine($"{record.Id}. Pages read: {record.Amount}; Date: {record.Date}");
-                    }
-                }
+                DisplayRecords(db);
                 return false;
             case 2:
                 date = GetDate();
-                amount = GetAmount();
-                db.InsertRecord(date, amount);
+                if (date != "0")
+                {
+                    amount = GetAmount();
+                    db.InsertRecord(date, amount);
+                }
                 return false;
             case 3:
-                Console.WriteLine("Enter ID of the record you want to update.");
+                Console.WriteLine("Existing records:");
+                DisplayRecords(db);
+                Console.WriteLine("Enter ID of the record you want to update or enter '0' to return to the menu.");
                 id = GetID(db);
-                date = GetDate();
-                amount = GetAmount();
-                db.UpdateRecord(id, date, amount);
+                if (id != 0)
+                {
+                    date = GetDate();
+                    amount = GetAmount();
+                    db.UpdateRecord(id, date, amount);
+                }
                 return false;
             case 4:
-                Console.WriteLine("Enter ID of the record you want to remove.");
+                Console.WriteLine("Existing records:");
+                DisplayRecords(db);
+                Console.WriteLine("Enter ID of the record you want to remove or enter '0' to return to the menu.");
                 id = GetID(db);
-                db.DeleteRecord(id);
+                if (id != 0)
+                {
+                    db.DeleteRecord(id);
+                }
                 return false;
             case 5:
                 Console.WriteLine("Enter the year for which the report should be displayed.");
@@ -81,8 +85,12 @@ static class UserInterface
     static private string GetDate()
     {
         string dateInput;
-        Console.WriteLine("Enter the date (dd-mm-yyyy):");
+        Console.WriteLine("Enter the date (dd-mm-yyyy) or enter '0' to return to the menu.:");
         dateInput = Console.ReadLine();
+        if (dateInput == "0")
+        {
+            return dateInput;
+        }
         while (!DateTime.TryParseExact(dateInput, "dd-MM-yyyy", new CultureInfo("en-US"), DateTimeStyles.None, out _))
         {
             Console.WriteLine("Invalid input. Enter the date in the correct format.");
@@ -107,32 +115,26 @@ static class UserInterface
         int id;
         while (!int.TryParse(Console.ReadLine(), out id) || !db.RecordExists(id))
         {
+            if (id == 0)
+            {
+                return 0;
+            }
             Console.WriteLine("Invalid input. Enter correct ID");
         }
         return id;
     }
-}
 
-class Report
-{
-    static public void YearlyReport(List<DatabaseRecord> records, string year)
+    static private void DisplayRecords(DatabaseHandler db)
     {
-        int pages = 0;
-        int times = 0;
-        bool found = false;
-
-        foreach (var record in records)
+        var records = db.GetAllRecords();
+        if (records.Count == 0)
+            Console.WriteLine("No records found");
+        else
         {
-            if (record.Date.Contains(year))
+            foreach (var record in records)
             {
-                found = true;
-                pages += record.Amount;
-                times++;
+                Console.WriteLine($"{record.Id}. Pages read: {record.Amount}; Date: {record.Date}");
             }
         }
-        if (found)
-            Console.WriteLine($"In {year} you read books {times} times and read a total of {pages} pages.");
-        else
-            Console.WriteLine("No data found for the year entered.");
     }
 }
