@@ -13,19 +13,6 @@ HabitTracker is a simple CLI-based app that can be used to log occurences of a h
 - Available operations include inserting, updating, deleting and viewing the data.
 - The user can also generate a report, that displays units and occurences of the habit in the selected year.
 
-# Project structure
-
-- Program.cs:
-    - Entry point of the application
-    - Manages the main loop
-    - Interacts with other classes
-- Interface.cs 
-    - Contains UserInterface class which provides methods for interaction with the user, such as displaying the menu and getting user's input.
-    - Contains Report class responsible for generating reports (currently only yearly reports).
-- Database.cs
-    - Contains DatabaseHandler class that creates the database and implements database operations.
-    - Contains DatabaseRecord class that represents a database record with its values.
-
 # Database schema
 The application creates an SQLite database (database.db) with the following schema:
 | Column  | Type    | Description                      |
